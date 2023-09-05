@@ -15,7 +15,9 @@ jobs:
         node-version: '20.x'
         cache: 'npm'
     - run: |
-        npx @angular/cli build --output-path _site --base-href /autoblock-ui/
+        npm install -g @angular/cli
+        npm install
+        ng build --output-path _site --base-href /autoblock-ui/
         cp _site/index.html _site/404.html
     - name: Upload artifact
       uses: actions/upload-pages-artifact@v2

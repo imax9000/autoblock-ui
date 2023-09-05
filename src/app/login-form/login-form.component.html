@@ -1,0 +1,17 @@
+<div class="full-width content">
+  <mat-card class="login-form">
+    <form class="full-width" (ngSubmit)="doLogin()" #loginForm="ngForm">
+      <mat-form-field class="full-width">
+        <mat-label>Handle або email</mat-label>
+        <input matInput required [(ngModel)]="login" name="login">
+      </mat-form-field>
+      <mat-form-field class="full-width">
+        <mat-label>Application password</mat-label>
+        <input matInput required type="password" [(ngModel)]="password" name="password">
+      </mat-form-field>
+      <button mat-raised-button type="submit" color="primary" class="full-width" [disabled]="!loginForm.form.valid">
+        Увійти
+      </button>
+    </form>
+  </mat-card>
+</div>

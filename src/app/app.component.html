@@ -13,7 +13,7 @@
 
 <section class="content">
   <app-login-form [hidden]="loggedIn"></app-login-form>
-  <div [hidden]="!loggedIn">
+  <div *ngIf="loggedIn">
     <app-manage-lists [hidden]="!loadingDone || !(whitelisted() | async)"></app-manage-lists>
     <h1 [hidden]="!loadingDone || (whitelisted() | async)">Вибачте, у вас немає доступу до цього сервісу</h1>
   </div>

@@ -42,6 +42,7 @@ export class AppComponent {
 
   async logout() {
     this.whitelistedObservable = null;
+    window.localStorage.clear();
     return this.bsky.logout();
   }
 }

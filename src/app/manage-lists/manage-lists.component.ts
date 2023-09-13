@@ -31,6 +31,7 @@ export class ManageListsComponent {
   private queryEnabled() {
     this.api.enabled(null, this.bsky.authContext).subscribe({
       next: (resp) => this.autoblockEnabled = resp.enabled,
+      error: (err) => this.snackBar.open(`Сталася помилка: ${err.message || err}`, 'Закрити'),
     });
   }
 

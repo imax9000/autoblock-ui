@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { BskyAgentService } from '../bsky-agent.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-login-form',
@@ -8,16 +9,21 @@ import { BskyAgentService } from '../bsky-agent.service';
 })
 
 export class LoginFormComponent {
-  constructor(private bsky: BskyAgentService) { }
+  constructor(private bsky: BskyAgentService,
+    public snackBar: MatSnackBar) { }
 
   public login: string = "";
   public password: string = "";
 
   async doLogin() {
-    await this.bsky.agent.login({
-      identifier: this.login,
-      password: this.password,
-    });
+    try {
+      await this.bsky.agent.login({
+        identifier: this.login,
+        password: this.password,
+      });
+    } catch (e) {
+      this.snackBar.open(`Сталася помилка: ${e.message}`, 'Закрити');
+    }
     window.localStorage.setItem('app-password', this.password);
   }
 }

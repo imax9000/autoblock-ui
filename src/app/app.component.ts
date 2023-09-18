@@ -1,10 +1,15 @@
 import { Component } from '@angular/core';
-import { Observable, of, map, shareReplay } from 'rxjs';
+import { Observable, of, map, shareReplay, catchError } from 'rxjs';
 import { HttpContext } from '@angular/common/http';
 
 import { BskyAgentService } from './bsky-agent.service';
 import { ApiService } from './api/services';
 import { BEARER_TOKEN } from './auth-interceptor';
+
+interface Response {
+  whitelisted?: boolean;
+  message?: string;
+}
 
 @Component({
   selector: 'app-root',
@@ -13,7 +18,7 @@ import { BEARER_TOKEN } from './auth-interceptor';
 })
 export class AppComponent {
   title = 'autoblock';
-  private whitelistedObservable?: Observable<boolean>;
+  private whitelistedObservable?: Observable<Response>;
   loadingDone = false;
 
   constructor(
@@ -33,11 +38,20 @@ export class AppComponent {
     }
     if (!this.whitelistedObservable) {
       this.whitelistedObservable = this.api.whitelisted(null, this.bsky.authContext).pipe(
-        map((v) => v.whitelisted),
         shareReplay(1),
       );
     }
-    return this.whitelistedObservable;
+    return this.whitelistedObservable.pipe(map((v) => v.whitelisted));
+  }
+
+  whitelistedMessage(): Observable<string | null> {
+    if (!this.whitelistedObservable) {
+      return of(null);
+    }
+    return this.whitelistedObservable.pipe(
+      map(v => v.message),
+      catchError(err => JSON.stringify(err, null, 2)),
+    );
   }
 
   async logout() {

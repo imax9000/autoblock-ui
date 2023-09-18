@@ -13,8 +13,13 @@
 
 <section class="content">
   <app-login-form [hidden]="loggedIn"></app-login-form>
-  <div *ngIf="loggedIn">
-    <app-manage-lists [hidden]="!loadingDone || !(whitelisted() | async)"></app-manage-lists>
-    <h1 [hidden]="!loadingDone || (whitelisted() | async)">Вибачте, у вас немає доступу до цього сервісу</h1>
+  <div *ngIf="loggedIn && loadingDone">
+    <app-manage-lists *ngIf="whitelisted() | async"></app-manage-lists>
+    <div *ngIf="!(whitelisted() | async)">
+      <h1>Вибачте, у вас немає доступу до цього сервісу</h1>
+      <p *ngIf="whitelistedMessage() | async">
+        {{whitelistedMessage() | async}}
+      </p>
+    </div>
   </div>
 </section>

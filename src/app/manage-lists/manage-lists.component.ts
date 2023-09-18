@@ -92,9 +92,9 @@ export class ManageListsComponent {
     this.subscribedLists = lists.map(l => l.uri);
 
     const autoblockedLists = await firstValueFrom(this.api.listsGet(null, this.bsky.authContext));
-    this.autoblockedLists = autoblockedLists.lists;
+    this.autoblockedLists = autoblockedLists.lists || [];
 
-    const missing = autoblockedLists.lists.filter(uri => !listsByUri[uri]);
+    const missing = this.autoblockedLists.filter(uri => !listsByUri[uri]);
     const missingLists = await Promise.all(missing.map(uri => this.bsky.agent.app.bsky.graph.getList({ list: uri, limit: 1 })));
 
     this.lists = lists.concat(missingLists.map(l => l.data.list))

@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { Observable, of, map, shareReplay, catchError } from 'rxjs';
+import { Observable, of, map, shareReplay, catchError, finalize } from 'rxjs';
 import { HttpContext } from '@angular/common/http';
 
 import { BskyAgentService } from './bsky-agent.service';
@@ -20,6 +20,7 @@ export class AppComponent {
   title = 'autoblock';
   private whitelistedObservable?: Observable<Response>;
   loadingDone = false;
+  whitelistCheckDone = false;
 
   constructor(
     private bsky: BskyAgentService,
@@ -38,6 +39,7 @@ export class AppComponent {
     }
     if (!this.whitelistedObservable) {
       this.whitelistedObservable = this.api.whitelisted(null, this.bsky.authContext).pipe(
+        finalize(() => this.whitelistCheckDone = true),
         shareReplay(1),
       );
     }

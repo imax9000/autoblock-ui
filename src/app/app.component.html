@@ -15,7 +15,7 @@
   <app-login-form [hidden]="loggedIn"></app-login-form>
   <div *ngIf="loggedIn && loadingDone">
     <app-manage-lists *ngIf="whitelisted() | async"></app-manage-lists>
-    <div *ngIf="!(whitelisted() | async)">
+    <div *ngIf="whitelistCheckDone && !(whitelisted() | async)">
       <h1>Вибачте, у вас немає доступу до цього сервісу</h1>
       <p *ngIf="whitelistedMessage() | async">
         {{whitelistedMessage() | async}}
